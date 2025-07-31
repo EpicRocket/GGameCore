@@ -6,8 +6,6 @@
 #include "Engine/GameViewportClient.h"
 #include "Animation/WidgetAnimation.h"
 #include "Animation/WidgetAnimationEvents.h"
-#include "Animation/UMGSequencePlayer.h"
-// C:\UnrealEngine\Engine\Source\Runtime\UMG\Public\Animation\UMGSequencePlayer.h
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(GLoadingWidget)
 
@@ -80,12 +78,10 @@ void UGLoadingWidget::NativeOnDeactivated()
 	Super::NativeOnDeactivated();
 
 	// NOTE. 시작 애니메이션이 아직 재생중이라면 종료 애니메이션을 재생하지 않게 합니다.
-	if (UUMGSequencePlayer* FoundPlayer = GetSequencePlayer(BeginAnimation))
+	auto AnimationState = GetAnimationState(BeginAnimation);
+	if (AnimationState && AnimationState->IsPlayingForward())
 	{
-		if (FoundPlayer->IsPlayingForward())
-		{
-			return;
-		}
+		return;
 	}
 
 	if (IsValid(EndAnimation))
