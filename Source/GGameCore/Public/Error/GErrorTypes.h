@@ -30,6 +30,22 @@ struct FGErrorInfo : public FTableRowBase
 	{
 	}
 
+	virtual void OnDataTableChanged(const UDataTable* InDataTable, const FName InRowName) override
+	{
+		if (!InDataTable)
+		{
+			return;
+		}
+
+		auto Row = InDataTable->FindRow<FGErrorInfo>(InRowName, TEXT(""));
+		if (!Row)
+		{
+			return;
+		}
+
+		Row->ErrCode = InRowName.ToString();
+	}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EGErrType ErrType = EGErrType::None;
 
